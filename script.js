@@ -27,6 +27,21 @@ var attrStructure = {"tag":"(0008,0018)","value":"1.3.51.0.7.1193286233.9961.330
 // loop through the above data structure and create a tree-like output on the screen. 
 // You can use jQuery to attach event handlers for hiding/showing nodes in the tree.
 
+converter = {
+  convertTag: function(tag) {
+    var result = {}
+    result[tag["tag"]] = tag["value"];
+    result["attr"] = this.convertTagArray(tag["attr"]);
+    return result;
+  },
+  convertTagArray: function(tag_array) {
+    var result = {}
+    $.each(tag_array, function(index, tag) {
+      result[tag["tag"]] = tag["value"];
+    });
+    return result; 
+  }
+};
 
 // #2
 
