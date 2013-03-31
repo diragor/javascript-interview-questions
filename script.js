@@ -27,6 +27,7 @@ var attrStructure = {"tag":"(0008,0018)","value":"1.3.51.0.7.1193286233.9961.330
 // loop through the above data structure and create a tree-like output on the screen. 
 // You can use jQuery to attach event handlers for hiding/showing nodes in the tree.
 
+// RME: my intention in this solution was to use recursion with convertTagArray calling convertTag, but due to the "attr" result being specified as a single object with many key/value pairs rather than an array of objects, multiple "attr" elements under the top level one wouldn't work
 converter = {
   convertTag: function(tag) {
     var result = {}
@@ -42,6 +43,44 @@ converter = {
     return result; 
   }
 };
+
+// RME: since there's only one level below the root, I'll make the "tag" part visible and you expand to see the "value" part
+
+function makeNode(dom_parent, tag_name, value_element) {
+  dom_parent.append($(document.createElement('div')).addClass('node')
+    .append($(document.createElement('div')).addClass('tag_name closed').html(tag_name))
+    .append(value_element)
+  );
+}
+
+function makeNodes(obj) {
+  var subtree = $(document.createElement('div')).addClass('subtree').css('display', 'none');
+  var value_element;
+  $.each(obj, function(key, value) {
+    if (key == "attr") {
+      value_element = makeNodes(value);
+    } else {
+      value_element = $(document.createElement('div')).addClass('tag_value').html(value).css('display', 'none')
+    }
+    makeNode(subtree, key, value_element);
+  });
+  return subtree;
+}
+
+function toggleNode(node) {
+  var newclass = (node.hasClass('closed')) ? 'open' : 'closed'
+  node.removeClass('open closed').addClass(newclass);
+  node.siblings().toggle();
+}
+
+$(function() {
+  var convertedAttrs = converter.convertTag(attrStructure);
+  $('#tree').append(makeNodes(convertedAttrs).show());
+
+  $('.tag_name').on('click', function() {
+    toggleNode($(this));
+  });
+})
 
 // #2
 

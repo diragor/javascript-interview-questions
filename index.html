@@ -2,11 +2,30 @@
   <head>
     <title>js questions</title>
   </head>
+  <style>
+    #tree {
+      border: 1px solid gray;
+      padding: 1em;
+    }
+    .tag_name {
+      cursor: hand;
+    }
+    .tag_name.open:before {
+      content: "- ";
+    }
+    .tag_name.closed:before {
+      content: "+ ";
+    }
+    .tag_value, .subtree {
+      padding-left: 2em;
+    }
+  </style>
   <body>
     <div class="content">
-      Put elements here
+      <h1>Part 1 - attr tree</h1>
+      <div id="tree"></div>
     </div>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <script src="./test.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="./script.js"></script>
   </body>
 </html>
