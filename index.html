@@ -4,7 +4,6 @@
   </head>
   <style>
     #tree {
-      border: 1px solid gray;
       padding: 1em;
     }
     .tag_name {
@@ -19,11 +18,40 @@
     .tag_value, .subtree {
       padding-left: 2em;
     }
+    #freqs li span {
+      display: inline-block;
+      border-bottom: 1px solid silver;
+    }
+    .freq_word {
+      width: 8em;
+    }
+    .freq_count {
+      width: 2em;
+      text-align: right;
+    }
   </style>
   <body>
     <div class="content">
-      <h1>Part 1 - attr tree</h1>
+      <h1>Part 1 - Attr Tree</h1>
       <div id="tree"></div>
+      <h1>Part 2 - Word Frequencies</h1>
+      <form name="form" action="#">
+        <div>
+          <h2>Sort Method</h2>
+          <label>Alphabetical</label>
+          <input type="radio" name="sort_method" value="alpha">
+          <label>Frequency</label>
+          <input type="radio" name="sort_method" value="count" checked="checked">
+        </div>
+        <div>
+          <h2>Sort Direction</h2>
+          <label>Ascending</label>
+          <input type="radio" name="sort_dir" value="asc">
+          <label>Descending</label>
+          <input type="radio" name="sort_dir" value="desc" checked="checked">
+        </div>
+      </form>
+      <ul id="freqs"></ul>
     </div>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script src="./script.js"></script>

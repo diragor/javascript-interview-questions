@@ -73,15 +73,6 @@ function toggleNode(node) {
   node.siblings().toggle();
 }
 
-$(function() {
-  var convertedAttrs = converter.convertTag(attrStructure);
-  $('#tree').append(makeNodes(convertedAttrs).show());
-
-  $('.tag_name').on('click', function() {
-    toggleNode($(this));
-  });
-})
-
 // #2
 
 // given the text in the variable "corpus", write the following:
@@ -91,4 +82,61 @@ var corpus = "The ship drew on and had safely passed the strait, which some volc
 // 2. show word frequency in descending order and ascending order, based on a radio button in index.html
 // 3. show words in alphabetical order and reverse alphabetical order, with word frequency, based on a radio button in index.html
 // 4. ensure that browser does not block when calculating these frequencies
+
+var word_freqs = [];
+
+function calc_word_freqs(text) {
+  var words = text.split(/[\W\s]+/);
+  var freqs = {};
+  word_freqs = [];
+  $.each(words, function(i, word) {
+    freqs[word.toLowerCase()] = (freqs[word.toLowerCase()] || 0) + 1;
+  });
+  delete freqs['']; // blanks from delimiters at ends
+  $.each(freqs, function(key, value) {
+    word_freqs.push({'word': key, 'count': value});
+  });
+}
+
+function display_word_freqs() {
+  $.each(word_freqs, function(i, obj) {
+    $('#freqs').append( $(document.createElement('li')).attr('id', obj['word']).html(
+      "<span class='freq_word'>" + obj['word'] + "</span> <span class='freq_count'>" + obj['count'] + "</span>"
+    ));
+  });
+}
+
+function sort_word_freqs(sort_method, sort_dir) {
+  var sort_mult = (sort_dir == 'asc') ? 1 : -1;
+  var sorted_freqs;
+  if (sort_method == 'alpha') {
+    sorted_freqs = word_freqs.sort(function(a,b){ return a['word'].localeCompare(b['word']) * sort_mult; });
+  } else {
+    sorted_freqs = word_freqs.sort(function(a,b){ return (a['count'] - b['count']) * sort_mult; });
+  }
+  var list = $('#freqs');
+  $.each(sorted_freqs, function(i, obj) {
+    list.append($('#' + obj['word']));
+  });
+}
+
+
+$(function() {
+  var convertedAttrs = converter.convertTag(attrStructure);
+  $('#tree').append(makeNodes(convertedAttrs).show());
+
+  $('.tag_name').on('click', function() {
+    toggleNode($(this));
+  });
+
+  calc_word_freqs(corpus);
+  display_word_freqs();
+  sort_word_freqs('count', 'desc');
+
+  $('input').on('change', function() {
+    var meth = $('input[name="sort_method"]:checked').val();
+    var dir = $('input[name="sort_dir"]:checked').val();
+    sort_word_freqs(meth, dir);
+  });
+})
 
